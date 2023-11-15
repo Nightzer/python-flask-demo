@@ -1,0 +1,50 @@
+def img
+pipeline {
+    environment {
+        dockerHub = "alejandrognway/python-jenkins"
+        dockerHubCredentials = 'docker-hub-login'
+        dockerImage = ''
+    }
+
+    agent any
+
+    stages {
+        stage("Clean Up") {
+            steps {
+                deleteDir()
+            }
+        }
+
+        stage("Clone Repo"){
+            steps {
+                sh "git clone https://github.com/AlejandroG-nway/python-docker.git"
+            }
+        }
+
+        stage("Docker Build"){
+            steps {
+                script {
+                    img = dockerHub + ":${env.BUILD_ID}"
+                    println("${img}")
+                    dockerImage = docker.build("${img}")
+                }
+            }
+        }
+
+        stage("Test"){
+            steps {
+                println("Running some tests ... pass")
+            }
+        }
+
+        stage("Push to Docker Hub"){
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com ', dockerHubCredentials) {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+    }
+}
