@@ -15,16 +15,6 @@ pipeline {
             }
         }
 
-        stage("Docker Build"){
-            steps {
-                script {
-                    img = dockerHub + ":${env.BUILD_ID}"
-                    println("${img}")
-                    dockerImage = docker.build("${img}")
-                }
-            }
-        }
-
         stage("Test"){
             steps {
                 println("Running some tests ... pass")
