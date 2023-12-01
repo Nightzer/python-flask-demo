@@ -30,8 +30,8 @@ RUN adduser \
     --uid "${UID}" \
     appuser
 
-COPY ./requirements.txt  /tmp/
-RUN pip install -r /tmp/requirements.txt
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
 # Switch to the non-privileged user to run the application.
 USER appuser
